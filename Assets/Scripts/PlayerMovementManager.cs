@@ -13,6 +13,7 @@ public class PlayerMovementManager : MonoBehaviour
     private float gravity = -9.8f;
     private float jumpHeight = 3f;
     private bool rollStart;
+    static public bool gameStarted;
     void Start()
     {
         
@@ -25,6 +26,11 @@ public class PlayerMovementManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!gameStarted)
+        {
+            playerVelocity = Vector3.zero;
+            return;
+        }
         playerVelocity.z = speed;
 
         if (controller.isGrounded && playerVelocity.y < 0)
@@ -110,4 +116,6 @@ public class PlayerMovementManager : MonoBehaviour
         controller.height = 2;
         GetComponentInChildren<Animator>().SetBool("rollStart", false);
     }
+
+    
 }
