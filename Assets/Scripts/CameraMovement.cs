@@ -17,8 +17,16 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        Vector3 newTarget = new Vector3(target.position.x, transform.position.y, target.position.z + offset.z);
+      
+        Vector3 newTarget = new Vector3(target.position.x/2, transform.position.y, target.position.z + offset.z);
         
         transform.position = Vector3.Lerp(transform.position, newTarget,10*Time.deltaTime);
+    }
+
+    public void ResetCamera()
+    {
+       
+        Vector3 newTarget = new Vector3(0, transform.position.y, target.position.z + offset.z);
+        transform.position = Vector3.Lerp(transform.position, newTarget, 10 * Time.deltaTime);
     }
 }

@@ -10,6 +10,7 @@ public class EventsManager : MonoBehaviour
     public GameObject inGamePanel;
     public GameObject tileManager;
     public GameObject player;
+    public Camera Cam;
     public TextMeshProUGUI playBtn;
     public string playbtnVal="Play";
     void Start()
@@ -21,14 +22,19 @@ public class EventsManager : MonoBehaviour
     void Update()
     {
         playBtn.text = playbtnVal;
+        if(PlayerMovementManager.gameOver == true)
+        {
+            gameOverFunc();
+        }
     }
 
    
 
 
-    public void pauseGame()
+    public void pauseGame(string s="Resume")
     {
-        playbtnVal = "Resume";
+        Cam.GetComponent<CameraMovement>().ResetCamera();
+        playbtnVal = s;
         PlayerMovementManager.gameStarted = false;
         inGamePanel.SetActive(false);
         outGamePanel.SetActive(true);
@@ -38,10 +44,21 @@ public class EventsManager : MonoBehaviour
 
     public void startGame()
     {
+        PlayerMovementManager.gameOver = false;
         PlayerMovementManager.gameStarted = true;
         inGamePanel.SetActive(true);
         outGamePanel.SetActive(false);
         tileManager.SetActive(true);
         player.SetActive(true);
+    }
+
+    public void gameOverFunc()
+    {
+        ScoreManager.score = 0;
+        
+        TileManager.zSpawn = 0;
+        player.transform.position = new Vector3(0, 1, -49);
+        pauseGame("Play");
+
     }
 }

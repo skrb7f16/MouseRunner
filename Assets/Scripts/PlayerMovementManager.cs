@@ -14,6 +14,8 @@ public class PlayerMovementManager : MonoBehaviour
     private float jumpHeight = 3f;
     private bool rollStart;
     static public bool gameStarted;
+    static public bool gameOver;
+
     void Start()
     {
         
@@ -21,6 +23,7 @@ public class PlayerMovementManager : MonoBehaviour
         playerVelocity = Vector3.zero;
         
         controller = GetComponent<CharacterController>();
+       
     }
 
     // Update is called once per frame
@@ -85,7 +88,7 @@ public class PlayerMovementManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if (!gameStarted) return;   
         controller.Move(playerVelocity * Time.fixedDeltaTime);
     }
 
@@ -103,9 +106,10 @@ public class PlayerMovementManager : MonoBehaviour
     private void Roll()
     {
         controller.center = new Vector3(0,-0.5f,0);
-        controller.height = 1;
+        controller.height = 0.5f;
+        GetComponent<CapsuleCollider>().direction = 2;
         GetComponentInChildren<Animator>().SetBool("rollStart", true);
-        Invoke("RollStop", 1.5f);
+        Invoke("RollStop", .7f);
         
 
     }
@@ -114,8 +118,19 @@ public class PlayerMovementManager : MonoBehaviour
     {
         controller.center = new Vector3(0, 0, 0);
         controller.height = 2;
+        GetComponent<CapsuleCollider>().direction = 1;
         GetComponentInChildren<Animator>().SetBool("rollStart", false);
     }
 
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("obstacle"))
+        {
+            FindObjectOfType<AudioManager>().PlaySound("gameOver");
+            gameOver = true;
+            
+        }
+    }
+
 }

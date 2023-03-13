@@ -20,6 +20,7 @@ public class CoinManager : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            FindObjectOfType<AudioManager>().PlaySound("coinPickUp");
             ScoreManager.score++;
             Destroy(this.gameObject);
         }

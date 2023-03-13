@@ -5,10 +5,10 @@ using UnityEngine;
 public class TileManager : MonoBehaviour
 {
     public GameObject[] tilePrefabs;
-    public float zSpawn = 0;
+    public static float zSpawn = 0;
     public float tileLength = 100;
     public GameObject player;
-    private List<GameObject> tiles=new List<GameObject>();
+    public static List<GameObject> tiles=new List<GameObject>();
     
     // Start is called before the first frame update
     void Start()
@@ -21,9 +21,21 @@ public class TileManager : MonoBehaviour
     {
         if (zSpawn - player.transform.position.z < tileLength && PlayerMovementManager.gameStarted)
         {
-            SpawnTile(Random.Range(0, 2));
+            SpawnTile(Random.Range(0, 4));
         }
-        if (tiles.Count > 3) tiles.RemoveAt(0);
+        if (tiles.Count > 3)
+        {
+            DestroyImmediate(tiles[0]);
+            tiles.RemoveAt(0);
+        }
+        if (PlayerMovementManager.gameOver)
+        {
+            while (tiles.Count>0)
+            {
+                DestroyImmediate(tiles[0]);
+                tiles.RemoveAt(0);
+            }
+        }
     }
 
     void SpawnTile(int index)
